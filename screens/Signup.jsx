@@ -28,7 +28,7 @@ export default function Signup({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.whiteSheet} />
       <SafeAreaView style={styles.form}>
         <Text style={styles.title}>Shmanks</Text>
@@ -71,7 +71,7 @@ export default function Signup({ navigation }) {
           <Text
             style={{ color: colors.darkgrey, fontWeight: "600", fontSize: 14 }}
           >
-            Don't have an account?{" "}
+            Don't have an account?
           </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text
@@ -87,7 +87,7 @@ export default function Signup({ navigation }) {
         </View>
       </SafeAreaView>
       <StatusBar barStyle="light-content" />
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 42,
     fontWeight: "bold",
-    color: colors.black,
+    color: colors.white,
     alignSelf: "center",
     paddingBottom: 24,
   },

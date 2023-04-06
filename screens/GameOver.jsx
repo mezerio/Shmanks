@@ -5,6 +5,7 @@ import {
   Text,
   Image,
   StyleSheet,
+  SafeAreaView,
   TextInput,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -38,18 +39,24 @@ const Home = () => {
   useLayoutEffect(() => {
     const docRef = doc(database, "games", myRoomCode);
     const unsubscribe = onSnapshot(docRef, (doc) => {
-      var newPlayersArray = doc.data().playersArray;
-      var newPlayersExited = doc.data().playersExited;
-      setPlayersExited(newPlayersExited);
-      setPlayersArray(newPlayersArray);
-      console.log(newPlayersArray);
-      sortRankings(newPlayersArray);
+      if (doc.data() != null) {
+        var newPlayersArray = doc.data().playersArray;
+        var newPlayersExited = doc.data().playersExited;
+        setPlayersExited(newPlayersExited);
+        setPlayersArray(newPlayersArray);
+        //   //console.log(newPlayersArray);
+        sortRankings(newPlayersArray);
+        if (newPlayersExited == newPlayersArray.length) {
+          unsubscribe();
+          deleteDoc(docRef);
+        }
+      }
     });
     return unsubscribe;
   }, []);
 
   function sortRankings(array) {
-    console.log(array, "arr");
+    // //console.log(array, "arr");
     var newPlayersScore = [];
     array.map((player) => {
       const score = getScore(player);
@@ -106,16 +113,13 @@ const Home = () => {
     updateDoc(docRef, {
       playersExited: newPlayersExited,
     });
-    console.log(playersExited, playersScore.length, "shutimkdjnk");
-    if (newPlayersExited == playersScore.length) {
-      deleteDoc(docRef);
-    }
+    // //console.log(playersExited, playersScore.length, "shutimkdjnk");
+    console.log("left");
     navigation.navigate("Home");
   }
 
   return (
-    <View style={styles.container}>
-      <Text>hi</Text>
+    <SafeAreaView style={styles.container}>
       {ranked ? (
         <View style={styles.leaderBoard}>
           {playerID == playersScore[0][0].id ? (
@@ -140,7 +144,7 @@ const Home = () => {
       <TouchableOpacity onPress={handleBackToHome} style={styles.gameButton}>
         <Text style={styles.BtnText}>Back To Home</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

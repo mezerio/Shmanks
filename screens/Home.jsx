@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
@@ -49,7 +50,7 @@ const Home = () => {
 
   async function handleCreateRoom() {
     const newRoomCode = await generateNewCode();
-    console.log("new room code: ", newRoomCode);
+    //console.log("new room code: ", newRoomCode);
     const docRef = doc(database, "games", newRoomCode);
     playersArray = [{ id: 1, name: "player1", cards: [], shmanks: 11 }];
     playerID = 1;
@@ -59,7 +60,7 @@ const Home = () => {
       gameStarted: false,
       playersExited: 0,
     });
-    console.log(playerID, "pi");
+    //console.log(playerID, "pi");
     navigation.navigate("Waiting", {
       // navigation.navigate("GameOver", {
       RoomCode: newRoomCode,
@@ -68,40 +69,43 @@ const Home = () => {
   }
 
   function handleJoinRoom() {
-    console.log("joined room code: ", roomCode);
-    const docRef = doc(database, "games", roomCode);
-    getDoc(docRef).then((doc) => {
-      if (doc.exists()) {
-        const currentPlayersArray = doc.data().playersArray || [];
-        console.log(playerID, "pi01");
+    if (roomCode.length == 4) {
+      const docRef = doc(database, "games", roomCode);
+      getDoc(docRef).then((doc) => {
+        if (doc.exists()) {
+          const currentPlayersArray = doc.data().playersArray || [];
+          //console.log(playerID, "pi01");
 
-        playerID = currentPlayersArray.length + 1;
-        console.log(playerID, "pi1");
+          playerID = currentPlayersArray.length + 1;
+          //console.log(playerID, "pi1");
 
-        const myPlayer = {
-          id: currentPlayersArray.length + 1,
-          name: String("player" + playerID),
-          cards: [],
-          shmanks: 11,
-        };
-        currentPlayersArray.push(myPlayer);
-        setDoc(docRef, {
-          playersArray: currentPlayersArray,
-          playerID: playerID,
-          gameStarted: false,
-          playersExited: 0,
-        });
-        console.log(playerID, "pi2");
-        navigation.navigate("Waiting", {
-          RoomCode: roomCode,
-          myPlayerID: playerID,
-        });
-      }
-    });
+          const myPlayer = {
+            id: currentPlayersArray.length + 1,
+            name: String("player" + playerID),
+            cards: [],
+            shmanks: 11,
+          };
+          currentPlayersArray.push(myPlayer);
+          setDoc(docRef, {
+            playersArray: currentPlayersArray,
+            playerID: playerID,
+            gameStarted: false,
+            playersExited: 0,
+          });
+          //console.log(playerID, "pi2");
+          navigation.navigate("Waiting", {
+            RoomCode: roomCode,
+            myPlayerID: playerID,
+          });
+        }
+      });
+    }
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Shmanks!</Text>
+
       <TextInput
         style={styles.input}
         placeholder="Enter Room Code"
@@ -121,13 +125,20 @@ const Home = () => {
           new game
         </Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default Home;
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 42,
+    fontWeight: "bold",
+    color: colors.white,
+    alignSelf: "center",
+    paddingBottom: 24,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.red,
@@ -151,5 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     borderRadius: 10,
     padding: 12,
+    width: "50%",
+    textAlign: "center",
   },
 });

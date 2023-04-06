@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
 import {
   View,
   TouchableOpacity,
@@ -6,6 +6,7 @@ import {
   Image,
   StyleSheet,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import colors from "../colors";
@@ -23,6 +24,7 @@ import {
   doc,
   setDoc,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 
 const Waiting = () => {
@@ -40,22 +42,32 @@ const Waiting = () => {
   useLayoutEffect(() => {
     const docRef = doc(database, "games", myRoomCode);
     const unsubscribe = onSnapshot(docRef, (doc) => {
-      const newPlayerList = [];
-      doc.data().playersArray.map((player) => {
-        newPlayerList.push(player.name);
-      });
-      setPlayerList(newPlayerList);
-      if (doc.data().gameStarted === true) {
-        navigation.navigate("Game", {
-          RoomCode: myRoomCode,
-          myPlayerID: playerID,
+      if (doc.data() != null) {
+        // console.log(doc.exists, doc.data());
+        const newPlayerList = [];
+        doc.data().playersArray.map((player) => {
+          newPlayerList.push(player.name);
         });
+        setPlayerList(newPlayerList);
+        if (doc.data().gameStarted === true) {
+          navigation.navigate("Game", {
+            RoomCode: myRoomCode,
+            myPlayerID: playerID,
+          });
+        }
+      } else {
+        navigation.navigate("Home");
       }
-
-      // console.log("playerlist", playerList, playerID, "id");
     });
     return unsubscribe;
   }, []);
+
+  function handleBackToHome() {
+    const docRef = doc(database, "games", myRoomCode);
+    deleteDoc(docRef);
+    navigation.navigate("Home");
+  }
+
   function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -74,7 +86,7 @@ const Waiting = () => {
         deck: deck,
         shmanksOnCard: 0,
       });
-      // console.log("starting game in: ", myRoomCode);
+      // //console.log("starting game in: ", myRoomCode);
     }
   }
 
@@ -83,14 +95,16 @@ const Waiting = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.roomCode}>{myRoomCode}</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.roomCode}>
+        <Text style={styles.roomCodeText}>{myRoomCode}</Text>
+      </View>
       <View style={styles.playerList}>
         <Text style={styles.title}>Waiting...</Text>
         {playerList.map((player, index) => (
-          <Text key={index} style={styles.playerName}>
-            {player}
-          </Text>
+          <View key={index} style={styles.playerName}>
+            <Text>{player}</Text>
+          </View>
         ))}
       </View>
       {playerID == 1 ? (
@@ -102,7 +116,7 @@ const Waiting = () => {
               : [styles.gameButton, { opacity: 0.5 }]
           }
         >
-          <Text style={{ fontWeight: "bold", color: "#fff", fontSize: 18 }}>
+          <Text style={styles.BtnText}>
             {playerList.length > minPlayers
               ? "Start Game"
               : "Waiting for Players..."}
@@ -111,24 +125,26 @@ const Waiting = () => {
       ) : (
         <View />
       )}
-    </View>
+      <TouchableOpacity onPress={handleBackToHome} style={styles.leaveButton}>
+        <Text style={styles.BtnText}>Back To Home</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
 export default Waiting;
 
 const styles = StyleSheet.create({
+  BtnText: { fontWeight: "bold", color: "#fff", fontSize: 18 },
   roomCode: {
     color: colors.black,
     backgroundColor: colors.cream,
-    fontSize: 36,
     borderRadius: 5,
     padding: 5,
     marginTop: 40,
     width: "40%",
-    textAlign: "center",
-    fontWeight: "bold",
   },
+  roomCodeText: { fontSize: 36, textAlign: "center", fontWeight: "bold" },
   title: {
     color: colors.white,
     fontSize: 20,
@@ -148,6 +164,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   gameButton: {
+    backgroundColor: colors.beige,
+    height: 58,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "80%",
+    position: "absolute",
+    bottom: 110,
+  },
+  leaveButton: {
     backgroundColor: colors.beige,
     height: 58,
     borderRadius: 10,

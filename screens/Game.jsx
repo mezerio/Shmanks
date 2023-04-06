@@ -10,6 +10,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import {
   collection,
@@ -48,7 +49,7 @@ export default function Game() {
   // ];
 
   // const onSignOut = () => {
-  //   signOut(auth).catch((error) => console.log("Error logging out: ", error));
+  //   signOut(auth).catch((error) => //console.log("Error logging out: ", error));
   // };
 
   //top nav bar
@@ -77,8 +78,8 @@ export default function Game() {
   //   const collectionRef = collection(database, "games");
   //   const q = query(collectionRef);
   //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     console.log("querySnapshot unsusbscribe");
-  //     // console.log(
+  //     //console.log("querySnapshot unsusbscribe");
+  //     // //console.log(
   //     //   querySnapshot.docs[0].data().playersArray,
   //     //   "gotten players array"
   //     // );
@@ -161,7 +162,7 @@ export default function Game() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Shmanks</Text>
 
       <View style={styles.centerCard}>
@@ -247,7 +248,7 @@ export default function Game() {
       ) : (
         <View />
       )}
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 42,
     fontWeight: "bold",
-    color: colors.black,
+    color: colors.white,
     alignSelf: "center",
     paddingBottom: 24,
   },

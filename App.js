@@ -1,3 +1,6 @@
+// nox expo start --tunnel
+// eas build -p android --profile preview
+
 import React, { useState, createContext, useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";

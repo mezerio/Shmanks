@@ -182,7 +182,18 @@ export default function Game() {
       <ScrollView style={{ width: "100%" }}>
         <View style={styles.opponentsView}>
           {playersArray.map((player) => (
-            <View key={player.id} style={styles.playerTag}>
+            <View
+              key={player.id}
+              style={[
+                styles.playerTag,
+                playerID == player.id
+                  ? { backgroundColor: colors.darkbeige }
+                  : { backgroundColor: colors.beige },
+                currentPlayer == player.id
+                  ? { borderColor: colors.white }
+                  : { borderColor: "transparent" },
+              ]}
+            >
               <Text style={styles.playerName}>{player.name}</Text>
               <View style={styles.playerCards}>
                 {player.cards.length > 0 &&
@@ -308,11 +319,12 @@ const styles = StyleSheet.create({
   },
   playerTag: {
     padding: 5,
-    backgroundColor: colors.beige,
     marginVertical: 5,
     borderRadius: 5,
     width: "90%",
     marginLeft: "5%",
+    borderStyle: "solid",
+    borderWidth: 2,
   },
   playerName: {
     color: colors.white,

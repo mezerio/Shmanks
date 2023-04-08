@@ -97,6 +97,7 @@ const Home = () => {
             RoomCode: roomCode,
             myPlayerID: playerID,
           });
+          setRoomCode("");
         }
       });
     }
@@ -107,6 +108,7 @@ const Home = () => {
       <Text style={styles.title}>Shmanks!</Text>
 
       <TextInput
+        value={roomCode}
         style={styles.input}
         placeholder="Enter Room Code"
         autoCapitalize="characters"

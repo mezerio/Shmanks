@@ -46,7 +46,7 @@ const Waiting = () => {
         // console.log(doc.exists, doc.data());
         const newPlayerList = [];
         doc.data().playersArray.map((player) => {
-          newPlayerList.push(player.name);
+          newPlayerList.push([player.name, player.id]);
         });
         setPlayerList(newPlayerList);
         if (doc.data().gameStarted === true) {
@@ -102,8 +102,24 @@ const Waiting = () => {
       <View style={styles.playerList}>
         <Text style={styles.title}>Waiting...</Text>
         {playerList.map((player, index) => (
-          <View key={index} style={styles.playerName}>
-            <Text>{player}</Text>
+          <View
+            key={index}
+            style={[
+              styles.playerName,
+              playerID == player[1]
+                ? { backgroundColor: colors.darkbeige }
+                : { backgroundColor: colors.cream },
+            ]}
+          >
+            <Text
+              style={
+                playerID == player[1]
+                  ? { color: colors.white }
+                  : { color: colors.black }
+              }
+            >
+              {player[0]}
+            </Text>
           </View>
         ))}
       </View>
@@ -153,7 +169,6 @@ const styles = StyleSheet.create({
   },
   playerName: {
     color: colors.black,
-    backgroundColor: colors.cream,
     padding: 5,
     borderRadius: 5,
     margin: 5,

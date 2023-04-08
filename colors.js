@@ -6,5 +6,6 @@ const colors = {
   cream: "#FFF4E0",
   lightgrey: "#E4E5EA",
   darkgrey: "#4D4D4D",
+  darkbeige: "#FF9A62",
 };
 export default colors;

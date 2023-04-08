@@ -127,16 +127,21 @@ const Home = () => {
           ) : (
             <Text style={styles.title}>You Lose!</Text>
           )}
-          <View style={styles.playerCard}>
-            <Text style={styles.rank}>1.</Text>
-            <Text style={styles.name}>{playersScore[0][0].name}</Text>
-            <Text style={styles.score}>{playersScore[0][1]}</Text>
-          </View>
-          <View style={styles.playerCard}>
-            <Text style={styles.rank}>2.</Text>
-            <Text style={styles.name}>{playersScore[1][0].name}</Text>
-            <Text style={styles.score}>{playersScore[1][1]}</Text>
-          </View>
+          {playersScore.map((player, index) => (
+            <View
+              key={index}
+              style={[
+                styles.playerCard,
+                player[0].id == playerID
+                  ? { backgroundColor: colors.darkbeige }
+                  : { backgroundColor: colors.beige },
+              ]}
+            >
+              <Text style={styles.rank}>{index + 1}</Text>
+              <Text style={styles.name}>{player[0].name}</Text>
+              <Text style={styles.score}>{player[1]}</Text>
+            </View>
+          ))}
         </View>
       ) : (
         <View />
@@ -159,7 +164,6 @@ const styles = StyleSheet.create({
   playerCard: {
     margin: 5,
     padding: 10,
-    backgroundColor: colors.beige,
     borderRadius: 10,
     justifyContent: "space-around",
     flexDirection: "row",

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useLayoutEffect,
-  useCallback,
-} from "react";
+import React, { useState, useLayoutEffect, useCallback } from "react";
 import {
   TouchableOpacity,
   Text,
@@ -12,26 +7,13 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot,
-  updateDoc,
-  getDoc,
-  doc,
-} from "firebase/firestore";
-import { signOut } from "firebase/auth";
-import { auth, database } from "../config/firebase";
+import { onSnapshot, updateDoc, getDoc, doc } from "firebase/firestore";
+import { database } from "../config/firebase";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
 import colors from "../colors";
 
 export default function Game() {
   const navigation = useNavigation();
-  var myTurn = true;
-  var myTurn = false;
   var myRoomCode = useRoute().params.RoomCode;
   var playerID = useRoute().params.myPlayerID;
   const [playersArray, setPlayersArray] = useState([]);
@@ -40,56 +22,8 @@ export default function Game() {
   const [myShmanks, setMyShmanks] = useState(11);
   const [shmanksOnCard, setShmanksOnCard] = useState(0);
 
-  // var playersArray = [
-  //   { id: 1, cards: [1, 2, 3, 5], name: "mehdi (shmanks left: 30)" },
-  //   { id: 2, cards: [19], name: "latif" },
-  //   { id: 3, cards: [10, 25, 23, 11, 21, 20, 24, 35], name: "masum" },
-  //   { id: 4, cards: [7], name: "nayem" },
-  //   { id: 5, cards: [9, 15], name: "fahim" },
-  // ];
-
-  // const onSignOut = () => {
-  //   signOut(auth).catch((error) => //console.log("Error logging out: ", error));
-  // };
-
-  //top nav bar
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <TouchableOpacity
-  //         style={{
-  //           marginRight: 10,
-  //         }}
-  //         onPress={onSignOut}
-  //       >
-  //         <AntDesign
-  //           name="logout"
-  //           size={24}
-  //           color={colors.gray}
-  //           style={{ marginRight: 10 }}
-  //         />
-  //       </TouchableOpacity>
-  //     ),
-  //   });
-  // }, [navigation]);
-
-  // //retrieve prev messages
-  // useLayoutEffect(() => {
-  //   const collectionRef = collection(database, "games");
-  //   const q = query(collectionRef);
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     //console.log("querySnapshot unsusbscribe");
-  //     // //console.log(
-  //     //   querySnapshot.docs[0].data().playersArray,
-  //     //   "gotten players array"
-  //     // );
-  //   });
-  //   return unsubscribe;
-  // }, []);
-
-  // listen for changes and update
   useLayoutEffect(() => {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     const unsubscribe = onSnapshot(docRef, (doc) => {
       setCurrentPlayer(doc.data().currentPlayer);
       setPlayersArray(doc.data().playersArray);
@@ -125,9 +59,8 @@ export default function Game() {
     return displayableCardsArray;
   }
 
-  // send text to firebase
   const handleCardTaken = useCallback((cardTaken) => {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     let nextPlayer = 0;
     getDoc(docRef).then((doc) => {
       if (doc.exists()) {
@@ -313,7 +246,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   opponentsView: {
-    // flexDirection: "row",
     flexWrap: "wrap",
     width: "100%",
   },

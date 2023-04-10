@@ -1,29 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  View,
   TouchableOpacity,
   Text,
-  Image,
   StyleSheet,
   TextInput,
   SafeAreaView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import colors from "../colors";
-import { auth, database } from "../config/firebase";
+import { database } from "../config/firebase";
 
-import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot,
-  updateDoc,
-  getDoc,
-  doc,
-  setDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { getDoc, doc, setDoc } from "firebase/firestore";
 
 const Home = () => {
   const [roomCode, setRoomCode] = useState("");
@@ -38,7 +25,7 @@ const Home = () => {
       const randomIndex = Math.floor(Math.random() * characters.length);
       result += characters[randomIndex];
     }
-    const testRef = doc(database, "games", result);
+    const testRef = doc(database, "shmanks", result);
     return getDoc(testRef).then((doc) => {
       if (doc.exists()) {
         return generateNewCode();
@@ -50,8 +37,7 @@ const Home = () => {
 
   async function handleCreateRoom() {
     const newRoomCode = await generateNewCode();
-    //console.log("new room code: ", newRoomCode);
-    const docRef = doc(database, "games", newRoomCode);
+    const docRef = doc(database, "shmanks", newRoomCode);
     playersArray = [{ id: 1, name: "player1", cards: [], shmanks: 11 }];
     playerID = 1;
     setDoc(docRef, {
@@ -60,9 +46,7 @@ const Home = () => {
       gameStarted: false,
       playersExited: 0,
     });
-    //console.log(playerID, "pi");
     navigation.navigate("Waiting", {
-      // navigation.navigate("GameOver", {
       RoomCode: newRoomCode,
       myPlayerID: playerID,
     });
@@ -70,15 +54,11 @@ const Home = () => {
 
   function handleJoinRoom() {
     if (roomCode.length == 4) {
-      const docRef = doc(database, "games", roomCode);
+      const docRef = doc(database, "shmanks", roomCode);
       getDoc(docRef).then((doc) => {
         if (doc.exists()) {
           const currentPlayersArray = doc.data().playersArray || [];
-          //console.log(playerID, "pi01");
-
           playerID = currentPlayersArray.length + 1;
-          //console.log(playerID, "pi1");
-
           const myPlayer = {
             id: currentPlayersArray.length + 1,
             name: String("player" + playerID),
@@ -92,7 +72,6 @@ const Home = () => {
             gameStarted: false,
             playersExited: 0,
           });
-          //console.log(playerID, "pi2");
           navigation.navigate("Waiting", {
             RoomCode: roomCode,
             myPlayerID: playerID,

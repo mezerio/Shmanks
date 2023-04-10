@@ -3,48 +3,31 @@ import {
   View,
   TouchableOpacity,
   Text,
-  Image,
   StyleSheet,
   SafeAreaView,
-  TextInput,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import colors from "../colors";
-import { auth, database } from "../config/firebase";
+import { database } from "../config/firebase";
 
-import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot,
-  updateDoc,
-  getDoc,
-  doc,
-  deleteDoc,
-  setDoc,
-  arrayUnion,
-} from "firebase/firestore";
+import { onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 const Home = () => {
-  const [roomCode, setRoomCode] = useState("");
   const navigation = useNavigation();
   var playerID = useRoute().params.myPlayerID;
   var myRoomCode = useRoute().params.RoomCode;
   const [ranked, setRanked] = useState(false);
-  const [playersArray, setPlayersArray] = useState([]);
   const [playersExited, setPlayersExited] = useState(0);
   const [playersScore, setPlayersScore] = useState([]);
 
   useLayoutEffect(() => {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     const unsubscribe = onSnapshot(docRef, (doc) => {
       if (doc.data() != null) {
         var newPlayersArray = doc.data().playersArray;
         var newPlayersExited = doc.data().playersExited;
         setPlayersExited(newPlayersExited);
         setPlayersArray(newPlayersArray);
-        //   //console.log(newPlayersArray);
         sortRankings(newPlayersArray);
         if (newPlayersExited == newPlayersArray.length) {
           unsubscribe();
@@ -56,7 +39,6 @@ const Home = () => {
   }, []);
 
   function sortRankings(array) {
-    // //console.log(array, "arr");
     var newPlayersScore = [];
     array.map((player) => {
       const score = getScore(player);
@@ -108,13 +90,11 @@ const Home = () => {
   }
 
   function handleBackToHome() {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     var newPlayersExited = playersExited + 1;
     updateDoc(docRef, {
       playersExited: newPlayersExited,
     });
-    // //console.log(playersExited, playersScore.length, "shutimkdjnk");
-    console.log("left");
     navigation.navigate("Home");
   }
 

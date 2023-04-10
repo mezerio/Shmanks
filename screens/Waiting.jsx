@@ -1,34 +1,18 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   TouchableOpacity,
   Text,
-  Image,
   StyleSheet,
-  TextInput,
   SafeAreaView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import colors from "../colors";
-import { auth, database } from "../config/firebase";
-// import { useClipboard } from "@react-native-community/hooks";
+import { database } from "../config/firebase";
 
-import {
-  collection,
-  addDoc,
-  orderBy,
-  query,
-  onSnapshot,
-  updateDoc,
-  getDoc,
-  doc,
-  setDoc,
-  where,
-  deleteDoc,
-} from "firebase/firestore";
+import { onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore";
 
 const Waiting = () => {
-  // const { setString } = useClipboard();
   const [playerList, setPlayerList] = useState([]);
   const navigation = useNavigation();
   var myRoomCode = useRoute().params.RoomCode;
@@ -40,10 +24,9 @@ const Waiting = () => {
   }
 
   useLayoutEffect(() => {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     const unsubscribe = onSnapshot(docRef, (doc) => {
       if (doc.data() != null) {
-        // console.log(doc.exists, doc.data());
         const newPlayerList = [];
         doc.data().playersArray.map((player) => {
           newPlayerList.push([player.name, player.id]);
@@ -63,7 +46,7 @@ const Waiting = () => {
   }, []);
 
   function handleBackToHome() {
-    const docRef = doc(database, "games", myRoomCode);
+    const docRef = doc(database, "shmanks", myRoomCode);
     deleteDoc(docRef);
     navigation.navigate("Home");
   }
@@ -79,19 +62,14 @@ const Waiting = () => {
   function handleStartGame() {
     if (playerList.length > minPlayers) {
       deck = shuffleDeck(deck);
-      const docRef = doc(database, "games", myRoomCode);
+      const docRef = doc(database, "shmanks", myRoomCode);
       updateDoc(docRef, {
         gameStarted: true,
         currentPlayer: 1,
         deck: deck,
         shmanksOnCard: 0,
       });
-      // //console.log("starting game in: ", myRoomCode);
     }
-  }
-
-  function copyRoomCode() {
-    // setString(String(myRoomCode));
   }
 
   return (

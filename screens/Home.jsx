@@ -61,7 +61,7 @@ const Home = () => {
           playerID = currentPlayersArray.length + 1;
           const myPlayer = {
             id: currentPlayersArray.length + 1,
-            name: String("player" + playerID),
+            name: String("player " + playerID),
             cards: [],
             shmanks: 11,
           };

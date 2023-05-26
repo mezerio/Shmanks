@@ -27,7 +27,6 @@ const Home = () => {
         var newPlayersArray = doc.data().playersArray;
         var newPlayersExited = doc.data().playersExited;
         setPlayersExited(newPlayersExited);
-        setPlayersArray(newPlayersArray);
         sortRankings(newPlayersArray);
         if (newPlayersExited == newPlayersArray.length) {
           unsubscribe();

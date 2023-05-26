@@ -67,23 +67,17 @@ export default function Game() {
         const currentPlayersArray = doc.data().playersArray || [];
         const currentDeck = doc.data().deck || [];
         var currentShmanksOnCard = doc.data().shmanksOnCard || 0;
-        const totPlayers = currentPlayersArray.length;
-        if (playerID < totPlayers) {
-          nextPlayer = playerID + 1;
-        } else {
-          nextPlayer = 1;
-        }
+        const nextPlayer =
+          playerID < currentPlayersArray.length ? playerID + 1 : 1;
         if (cardTaken == true) {
           currentPlayersArray[playerID - 1].cards.push(currentDeck[0]);
-          currentPlayersArray[playerID - 1].shmanks =
-            currentPlayersArray[playerID - 1].shmanks + currentShmanksOnCard;
+          currentPlayersArray[playerID - 1].shmanks += currentShmanksOnCard;
           currentDeck.shift();
           currentShmanksOnCard = 0;
         } else {
           currentPlayersArray[playerID - 1].shmanks--;
           currentShmanksOnCard++;
         }
-
         updateDoc(docRef, {
           playersArray: currentPlayersArray,
           currentPlayer: nextPlayer,
@@ -195,143 +189,3 @@ export default function Game() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  myShmanks: {
-    margin: 5,
-    color: colors.white,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  cardShmanks: {
-    margin: 15,
-    padding: 5,
-    color: colors.white,
-    backgroundColor: colors.beige,
-    borderRadius: 10,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.red,
-    alignItems: "center",
-    width: "100%",
-  },
-  title: {
-    fontSize: 42,
-    fontWeight: "bold",
-    color: colors.white,
-    alignSelf: "center",
-  },
-
-  myName: {
-    color: colors.white,
-  },
-  myTag: {
-    padding: 5,
-  },
-  myCards: { flexDirection: "row", justifyContent: "center" },
-  myCard: {
-    borderRadius: 5,
-    height: 40,
-    backgroundColor: colors.cream,
-    width: 30,
-    justifyContent: "center",
-    margin: 5,
-  },
-  myCardValue: {
-    color: colors.darkgrey,
-    textAlign: "center",
-    fontSize: 24,
-  },
-  opponentsView: {
-    flexWrap: "wrap",
-    width: "100%",
-  },
-  playerTag: {
-    padding: 5,
-    marginVertical: 5,
-    borderRadius: 5,
-    width: "90%",
-    marginLeft: "5%",
-    borderStyle: "solid",
-    borderWidth: 2,
-  },
-  playerName: {
-    color: colors.white,
-  },
-  playerCards: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  playerCard: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  playerConsecutiveCard: {
-    borderRadius: 5,
-    height: 30,
-    backgroundColor: colors.cream,
-    width: 25,
-    justifyContent: "center",
-    marginVertical: 2,
-    marginHorizontal: -8,
-  },
-  playerCardValue: {
-    color: colors.darkgrey,
-    textAlign: "center",
-    fontSize: 16,
-  },
-  playerCardValuetl: {
-    color: colors.darkgrey,
-    paddingHorizontal: 2,
-    fontSize: 6,
-  },
-  gameArea: {
-    width: "60%",
-    aspectRatio: 1,
-    alignItems: "center",
-    margin: 10,
-  },
-
-  centerCard: {
-    backgroundColor: colors.cream,
-    height: "30%",
-    aspectRatio: 1 / 1.5,
-    borderRadius: 10,
-    justifyContent: "center",
-  },
-  centerCardValue: { textAlign: "center", fontSize: 100 },
-  centerCardValuetl: { fontSize: 20, paddingHorizontal: 15 },
-  chooseAction: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    width: "100%",
-    padding: 15,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    borderRadius: 20,
-    margin: 10,
-  },
-  takeCardBtn: {
-    backgroundColor: colors.cream,
-    height: 90,
-    aspectRatio: 1 / 1.5,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 5,
-    borderColor: colors.white,
-    borderStyle: "solid",
-    borderWidth: 5,
-  },
-  noShmanksBtn: {
-    backgroundColor: colors.red,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-    width: 90,
-    borderColor: colors.white,
-    borderStyle: "solid",
-    borderWidth: 5,
-  },
-});
